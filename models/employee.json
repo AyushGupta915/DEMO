@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "position": "Software Engineer"
+  },
+  {
+    "id": 2,
+    "name": "Ayush Gupta",
+    "position": "Developer"
+  },
+  {
+    "id": 3,
+    "name": "Alice Johnson",
+    "position": "UX Designer"
+  },
+  {
+    "id": 4,
+    "name": "Bob Brown",
+    "position": "Data Scientist"
+  }
+]

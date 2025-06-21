@@ -1,0 +1,14 @@
+2025-06-19 23:46:06	4dc48697-94ad-4260-bb94-ffa6ed3dc4ae	Error	This is a test error!
+2025-06-19 23:48:44	cf6a7a7f-49c3-4f3c-8825-f4a88226b6ec	Error	ENOENT: no such file or directory, stat 'C:\Users\ayush\OneDrive\Desktop\DEMO\viws\404.html'
+2025-06-20 00:13:19	7d757a51-02fc-45aa-96a2-6ebcabdd03f6	Error	ENOENT: no such file or directory, stat 'C:\Users\ayush\OneDrive\Desktop\DEMO\views\subdir\test.html'
+2025-06-20 00:24:42	59523274-c847-4a31-a601-dd6dc374b71d	Error	ENOENT: no such file or directory, stat 'C:\Users\ayush\OneDrive\Desktop\DEMO\routes\views\index.html'
+2025-06-20 00:25:24	6bae7518-8114-4c85-bb04-41d26fb6b990	Error	ENOENT: no such file or directory, stat 'C:\Users\ayush\OneDrive\Desktop\DEMO\routes\views\new-page.html'
+2025-06-20 00:25:41	f067e30f-f5b2-4f9a-9f50-a1d0b55976b4	ForbiddenError	Forbidden
+2025-06-20 00:25:45	9d8130c7-07de-431c-9a85-e735297b461c	Error	ENOENT: no such file or directory, stat 'C:\Users\ayush\OneDrive\Desktop\DEMO\routes\views\new-page.html'
+2025-06-20 00:53:25	30568966-4263-488e-b80f-24a6fdb7d555	TypeError	Cannot read properties of undefined (reading 'name')
+2025-06-20 05:16:36	12833608-0c1a-4c79-92a7-2ddab4612722	TypeError	Cannot read properties of undefined (reading 'name')
+2025-06-20 05:19:31	a8d3e2a7-4347-4998-b566-d95810fe0a0e	TypeError	Cannot read properties of undefined (reading 'name')
+2025-06-20 05:22:37	c185d347-952e-47ad-a2bd-2e873f07e15a	TypeError	Cannot read properties of undefined (reading 'name')
+2025-06-20 05:26:45	cfee75cb-db96-469a-ac1a-be6ce357d4fd	TypeError	Cannot read properties of undefined (reading 'name')
+2025-06-21 12:56:23	b2391297-8f08-4a6f-8e3f-671cdc734db7	ReferenceError	whiteList is not defined
+2025-06-21 12:56:23	2dee111d-3f43-4f02-908e-1a23ad1ae87c	ReferenceError	whiteList is not defined
