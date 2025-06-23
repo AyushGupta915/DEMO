@@ -1,36 +1,30 @@
-const path = require('path');
-const fsPromises = require('fs').promises;
-
-const dataPath = path.join(__dirname, '..', 'models', 'users.json');
+const User = require('../models/users');
 
 const handleLogout = async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(204);
+    if (!cookies?.jwt) return res.sendStatus(204); // No content
 
     const refreshToken = cookies.jwt;
 
     try {
-        const data = await fsPromises.readFile(dataPath, 'utf8');
-        const users = JSON.parse(data);
+        const user = await User.findOne({ refreshToken });
 
-        const foundUserIndex = users.findIndex(user => user.refreshToken === refreshToken);
-
-        if (foundUserIndex === -1) {
-            res.clearCookie('jwt', {httpOnly: true, sameSite: 'None', secure: true});
+        if (!user) {
+            // Clear cookie even if user not found
+            res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
             return res.sendStatus(204);
         }
 
-        users[foundUserIndex].refreshToken = '';
+        // Remove refreshToken from DB
+        user.refreshToken = '';
+        await user.save();
 
-        await fsPromises.writeFile(dataPath, JSON.stringify(users, null, 2));
-
-        res.clearCookie('jwt', { httpOnly: true });
-
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
         res.status(200).json({ message: "Logout successful." });
 
-    } catch (error) {
-        console.error(error);
-        res.sendStatus(500);
+    } catch (err) {
+        console.error("Logout error:", err);
+        res.status(500).json({ message: "Server error." });
     }
 };
 

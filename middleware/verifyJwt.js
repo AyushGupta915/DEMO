@@ -1,23 +1,20 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
-const verifyJwt = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+const verifyJWT = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
 
-    if (!token) {
-        return res.status(401).json({ message: "Unauthorized: No token provided" });
-    }
+  const token = authHeader.split(' ')[1];
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({ message: "Forbidden: Invalid token" });
-        }
-
-        req.user = decoded?.UserInfo?.username;
-        req.roles = decoded?.UserInfo?.roles || [];
-        next();
-    });
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) return res.sendStatus(403);
+    console.log("Decoded token:", decoded);
+console.log("Roles from token:", decoded?.UserInfo?.roles);
+ // invalid token
+    req.user = decoded.UserInfo.username;
+    req.roles = decoded.UserInfo.roles; // <== this is what you're seeing in console
+    next();
+  });
 };
 
-module.exports = verifyJwt;
+module.exports = verifyJWT;

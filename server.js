@@ -12,6 +12,7 @@ const logoutRouter = require('./routes/logoutRouter');
 const credential = require('./middleware/credentials');
 const verifyJwt = require('./middleware/verifyJwt');
 const cookieParser = require('cookie-parser');
+const connectDB = require('./config/dbConn');
 
 const {logger} = require('./middleware/logEvents');
 app.use(express.urlencoded({ extended: false }));
@@ -31,7 +32,7 @@ app.use('/', homeDirRouter)
 app.use('/register', registerRouter);
 app.use('/auth', loginRouter);
 
-
+connectDB();
 app.use('/api/employee', verifyJwt, employeeRouter);
 app.use('/refresh', refreshRouter);
 app.use('/logout', logoutRouter);

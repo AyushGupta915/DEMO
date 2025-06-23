@@ -1,42 +1,48 @@
-const fsPromises = require('fs').promises;
-const path = require('path');
 const bcrypt = require('bcrypt');
-
-const dataPath = path.join(__dirname, '..', 'models', 'users.json');
+const User = require('../models/users');
+const ROLES_LIST = require('../config/roles_list');
 
 const handleNewUser = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, roles } = req.body;
 
     if (!username?.trim() || !password?.trim()) {
         return res.status(400).json({ message: "Username and password are required." });
     }
 
     try {
-        // Read existing users
-        const data = await fsPromises.readFile(dataPath, 'utf8');
-        const users = JSON.parse(data);
-
         // Check for duplicate username
-        const duplicate = users.find(user => user.username === username);
-        if (duplicate) {
+        const existingUser = await User.findOne({ username: username.trim() });
+        if (existingUser) {
             return res.status(409).json({ message: "Username already exists." });
         }
 
-        // Hash the password
+        // Hash password
         const hashedPwd = await bcrypt.hash(password, 10);
 
-        // New user object
-        const newUser = {
+        // Prepare roles: sanitize and fallback to default { User: 2001 }
+        let newUserRoles = {};
+
+        if (roles && typeof roles === 'object') {
+            for (const roleName in roles) {
+                if (ROLES_LIST[roleName] && roles[roleName]) {
+                    newUserRoles[roleName] = ROLES_LIST[roleName];
+                }
+            }
+        }
+
+        // If no valid roles were provided, assign default User role
+        if (Object.keys(newUserRoles).length === 0) {
+            newUserRoles = { User: ROLES_LIST.User };
+        }
+
+        // Create and save new user
+        const result = await User.create({
             username: username.trim(),
             password: hashedPwd,
-            roles: { user: 2001 }
-        };
+            roles: newUserRoles
+        });
 
-        // Add and save
-        users.push(newUser);
-        await fsPromises.writeFile(dataPath, JSON.stringify(users, null, 2));
-
-        res.status(201).json({ success: `New user '${username}' created successfully.` });
+        res.status(201).json({ success: `New user '${result.username}' created successfully.` });
 
     } catch (error) {
         console.error("Error during registration:", error);

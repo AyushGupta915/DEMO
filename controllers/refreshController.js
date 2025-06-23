@@ -1,9 +1,6 @@
-const fsPromises = require('fs').promises;
-const path = require('path');
 const jwt = require('jsonwebtoken');
+const User = require('../models/users'); // Mongoose model
 require('dotenv').config();
-
-const dataPath = path.join(__dirname, '..', 'models', 'users.json');
 
 const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
@@ -12,11 +9,7 @@ const handleRefreshToken = async (req, res) => {
     const refreshToken = cookies.jwt;
 
     try {
-        const data = await fsPromises.readFile(dataPath, 'utf8');
-        const users = JSON.parse(data);
-
-        // Find the user with this refresh token
-        const foundUser = users.find(user => user.refreshToken === refreshToken);
+        const foundUser = await User.findOne({ refreshToken });
         if (!foundUser) return res.sendStatus(403); // Forbidden
 
         // Verify the refresh token
@@ -25,7 +18,7 @@ const handleRefreshToken = async (req, res) => {
                 return res.sendStatus(403);
             }
 
-            const roles = Object.values(foundUser.roles || {});
+            const roles = [...foundUser.roles.values()];
 
             const newAccessToken = jwt.sign(
                 {

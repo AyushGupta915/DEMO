@@ -1,18 +1,20 @@
-const verifiedRoles = (...allowedRoles) => {
-    return (req, res, next) => {
-        if (!req?.roles) {
-            return res.status(401).json({ message: "Unauthorized: No roles found" });
-        }
+const verifyRoles = (...allowedRoles) => {
+  return (req, res, next) => {
+    console.log("🔥 [verifyRoles] allowedRoles:", allowedRoles);
+    console.log("🔥 [verifyRoles] req.roles:", req.roles);
 
-        const rolesArray = [...allowedRoles];
-        const result = req.roles.map(role => rolesArray.includes(role)).find(val => val === true);
-
-        if (!result) {
-            return res.status(403).json({ message: "Forbidden: You do not have the required role" });
-        }
-
-        next();
+    if (!req?.roles || !Array.isArray(req.roles)) {
+      return res.status(401).json({ message: "Unauthorized: Roles not available" });
     }
-}
 
-module.exports = verifiedRoles;
+    const hasRole = req.roles.some(role => allowedRoles.includes(role));
+
+    if (!hasRole) {
+      return res.status(403).json({ message: "Forbidden: You do not have the required role" });
+    }
+
+    next();
+  };
+};
+
+module.exports = verifyRoles;
