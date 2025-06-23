@@ -1,18 +1,17 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/users'); // Mongoose model
+const User = require('../models/users');
 require('dotenv').config();
 
 const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(401); // No cookie
+    if (!cookies?.jwt) return res.sendStatus(401);
 
     const refreshToken = cookies.jwt;
 
     try {
         const foundUser = await User.findOne({ refreshToken });
-        if (!foundUser) return res.sendStatus(403); // Forbidden
+        if (!foundUser) return res.sendStatus(403);
 
-        // Verify the refresh token
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
             if (err || decoded.username !== foundUser.username) {
                 return res.sendStatus(403);

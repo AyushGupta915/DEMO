@@ -8,11 +8,8 @@ const verifyJWT = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) return res.sendStatus(403);
-    console.log("Decoded token:", decoded);
-console.log("Roles from token:", decoded?.UserInfo?.roles);
- // invalid token
     req.user = decoded.UserInfo.username;
-    req.roles = decoded.UserInfo.roles; // <== this is what you're seeing in console
+    req.roles = decoded.UserInfo.roles;
     next();
   });
 };

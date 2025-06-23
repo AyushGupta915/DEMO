@@ -1,7 +1,5 @@
 const verifyRoles = (...allowedRoles) => {
   return (req, res, next) => {
-    console.log("🔥 [verifyRoles] allowedRoles:", allowedRoles);
-    console.log("🔥 [verifyRoles] req.roles:", req.roles);
 
     if (!req?.roles || !Array.isArray(req.roles)) {
       return res.status(401).json({ message: "Unauthorized: Roles not available" });

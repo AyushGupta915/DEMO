@@ -10,16 +10,13 @@ const handleNewUser = async (req, res) => {
     }
 
     try {
-        // Check for duplicate username
         const existingUser = await User.findOne({ username: username.trim() });
         if (existingUser) {
             return res.status(409).json({ message: "Username already exists." });
         }
 
-        // Hash password
         const hashedPwd = await bcrypt.hash(password, 10);
 
-        // Prepare roles: sanitize and fallback to default { User: 2001 }
         let newUserRoles = {};
 
         if (roles && typeof roles === 'object') {
@@ -30,12 +27,10 @@ const handleNewUser = async (req, res) => {
             }
         }
 
-        // If no valid roles were provided, assign default User role
         if (Object.keys(newUserRoles).length === 0) {
             newUserRoles = { User: ROLES_LIST.User };
         }
 
-        // Create and save new user
         const result = await User.create({
             username: username.trim(),
             password: hashedPwd,

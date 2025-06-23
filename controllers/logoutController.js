@@ -2,7 +2,7 @@ const User = require('../models/users');
 
 const handleLogout = async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(204); // No content
+    if (!cookies?.jwt) return res.sendStatus(204);
 
     const refreshToken = cookies.jwt;
 
@@ -10,12 +10,10 @@ const handleLogout = async (req, res) => {
         const user = await User.findOne({ refreshToken });
 
         if (!user) {
-            // Clear cookie even if user not found
             res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
             return res.sendStatus(204);
         }
 
-        // Remove refreshToken from DB
         user.refreshToken = '';
         await user.save();
 

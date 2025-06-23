@@ -1,6 +1,5 @@
 const Employee = require('../models/employee');
 
-// GET all employees
 const getAllEmployees = async (req, res) => {
     try {
         const employees = await Employee.find();
@@ -10,7 +9,6 @@ const getAllEmployees = async (req, res) => {
     }
 };
 
-// GET one employee
 const getEmployee = async (req, res) => {
     try {
         const employee = await Employee.findById(req.params.id);
@@ -21,7 +19,6 @@ const getEmployee = async (req, res) => {
     }
 };
 
-// POST create new employee
 const createNewEmployee = async (req, res) => {
     const { name, position } = req.body;
 
@@ -37,7 +34,6 @@ const createNewEmployee = async (req, res) => {
     }
 };
 
-// PUT update employee
 const updateEmployee = async (req, res) => {
     const { id, name, position } = req.body;
 
@@ -58,7 +54,6 @@ const updateEmployee = async (req, res) => {
     }
 };
 
-// DELETE employee
 const deleteEmployee = async (req, res) => {
     const { id } = req.body;
 

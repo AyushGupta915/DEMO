@@ -20,11 +20,8 @@ const handleLogin = async (req, res) => {
       return res.status(401).json({ message: "Unauthorized: Invalid credentials." });
     }
 
-    // Filter roles with truthy (non-zero) values
     const roles = [...foundUser.roles.values()];
 
-
-    // Create Access Token
     const accessToken = jwt.sign(
       {
         UserInfo: {
@@ -36,25 +33,21 @@ const handleLogin = async (req, res) => {
       { expiresIn: '2m' }
     );
 
-    // Create Refresh Token
     const refreshToken = jwt.sign(
       { username: foundUser.username },
       process.env.REFRESH_TOKEN_SECRET,
       { expiresIn: '1d' }
     );
 
-    // Save Refresh Token in DB
     foundUser.refreshToken = refreshToken;
     await foundUser.save();
 
-    // Set Refresh Token in HttpOnly Cookie
     res.cookie('jwt', refreshToken, {
       httpOnly: true,
       sameSite: 'None',
       secure: true
     });
 
-    // Send access token and roles to frontend
     res.status(200).json({
       message: `Login successful. Welcome, ${username}!`,
       accessToken
